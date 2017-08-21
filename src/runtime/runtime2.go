@@ -479,6 +479,8 @@ type p struct {
 	mcache      *mcache
 	racectx     uintptr
 
+	netpollCounter uint32
+
 	deferpool    [5][]*_defer // pool of available defer structs of different sizes (see panic.go)
 	deferpoolbuf [5][32]*_defer
 

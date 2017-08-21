@@ -1897,6 +1897,7 @@ func execute(gp *g, inheritTime bool) {
 // Finds a runnable goroutine to execute.
 // Tries to steal from other P's, get g from global queue, poll network.
 func findrunnable() (gp *g, inheritTime bool) {
+	schedtrace(true)
 	_g_ := getg()
 
 	// The conditions here and in handoffp must agree: if
@@ -4004,7 +4005,7 @@ func schedtrace(detailed bool) {
 			if mp != nil {
 				id = mp.id
 			}
-			print("  P", i, ": status=", _p_.status, " schedtick=", _p_.schedtick, " syscalltick=", _p_.syscalltick, " m=", id, " runqsize=", t-h, " gfreecnt=", _p_.gfreecnt, "\n")
+			print("  P", i, ": status=", _p_.status, " schedtick=", _p_.schedtick, " syscalltick=", _p_.syscalltick, " m=", id, " runqsize=", t-h, " gfreecnt=", _p_.gfreecnt, " netpollCounter=", _p_.netpollCounter, "\n")
 		} else {
 			// In non-detailed mode format lengths of per-P run queues as:
 			// [len1 len2 len3 len4]

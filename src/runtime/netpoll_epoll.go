@@ -6,7 +6,10 @@
 
 package runtime
 
-import "unsafe"
+import (
+	"unsafe"
+	"runtime/internal/atomic"
+)
 
 func epollcreate(size int32) int32
 func epollcreate1(flags int32) int32
@@ -37,6 +40,13 @@ func netpollinit() {
 }
 
 func netpollopen(fd uintptr, pd *pollDesc) int32 {
+	println("NETPOLLOPEN")
+	schedtrace(true)
+	_p_ := getg().m.p.ptr()
+	lock(&sched.lock)
+	atomic.Xadd(&_p_.netpollCounter, 1)
+	unlock(&sched.lock)
+	schedtrace(true)
 	var ev epollevent
 	ev.events = _EPOLLIN | _EPOLLOUT | _EPOLLRDHUP | _EPOLLET
 	*(**pollDesc)(unsafe.Pointer(&ev.data)) = pd
